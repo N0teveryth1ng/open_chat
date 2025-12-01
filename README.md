@@ -3,6 +3,8 @@
 A very simple real‑time chat app built with **Flask**, **python‑socketio**, and **Eventlet**.  
 Clients connect via Socket.IO from the browser, pick a username, and exchange messages in a shared room.
 
+Project Link -> https://open-chat-gh0x.onrender.com
+
 ---
 
 ## Features
