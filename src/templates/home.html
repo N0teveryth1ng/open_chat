@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test chat app</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .chat-card {
+            width: 100%;
+            max-width: 800px;
+            background: #fff;
+            border: 2px solid #222;
+            border-radius: 6px;
+            padding: 24px;
+        }
+
+        .messages-box {
+            border: 2px solid #f97373;
+            border-radius: 8px;
+            height: 320px;
+            padding: 12px 16px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        #chat {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        #chat li {
+            margin-bottom: 8px;
+            font-size: 14px;
+            word-wrap: break-word;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        #msg {
+            flex: 1;
+            padding: 10px 14px;
+            border-radius: 999px;
+            border: 2px solid #222;
+            font-size: 14px;
+        }
+
+        #msg::placeholder {
+            color: #777;
+        }
+
+        button {
+            padding: 10px 20px;
+            border-radius: 999px;
+            border: 2px solid #16a34a;
+            background: #22c55e;
+            color: #fff;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        button:hover {
+            background: #16a34a;
+        }
+
+        @media (max-width: 600px) {
+            .chat-card {
+                margin: 0 12px;
+                padding: 16px;
+            }
+
+            .messages-box {
+                height: 260px;
+            }
+
+            .input-row {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-card">
+        <div class="messages-box">
+            <ul id="chat"></ul>
+        </div>
+
+        <div class="input-row">
+            <input
+                type="text"
+                id="msg"
+                placeholder="Type ur mesg..."
+                autocomplete="off"
+            >
+            <button onclick="sendMsg()">Send</button>
+            <button onclick="disCnt()">leave</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script>
+    const socket = io();
+
+    window.addEventListener("beforeunload", () => {
+    socket.disconnect();
+    });
+
+    socket.on("connect", () => {
+        console.log("connected:", socket.id);
+    });
+
+    socket.on("message", (data) => {
+        const chat = document.getElementById("chat");
+        const li = document.createElement("li")
+
+        li.textContent = data
+        chat.appendChild(li)
+    });
+
+    socket.on("usernames", (list) => {
+      console.log('online users:', list);
+    });
+
+    function sendMsg() {
+        const input = document.getElementById("msg")
+        const msg = document.getElementById("msg").value;
+        if (msg.trim() === "") return;
+        socket.emit("my_mssg", msg);
+        input.value = "";
+    }
+
+
+
+    // add username
+    let username = null
+    
+    window.onload = () => {
+        username = prompt('enter a username: ')
+        if (!username || username.trim() === "") {
+            username = "User" + Math.floor(Math.random() * 1000);
+        }
+
+    socket.emit("add_username", username)
+    };
+
+
+
+    // force disconnect buttton 
+    function disCnt() {
+        socket.disconnect();
+        alert("You have been disconnectd - ");
+    };
+    </script>
+
+</body>
+</html>

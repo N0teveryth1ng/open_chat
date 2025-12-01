@@ -1,0 +1,23 @@
+
+- - - - - Base set - - - - - 
+- base settings 
+- client to server and server to client ✅
+- Base Module works ✅
+
+
+
+
+     
+- - - - - integrations - - - - -
+- notification alert channel
+- better UI ✅
+- User sends messages which is showed by their entered name
+- session alert or redis
+- displays ["user" entered the chat] and ["user" left the chat] 
+
+
+
+
+- - - - - optional sets - - - - - 
+- send with enter  
+- 
